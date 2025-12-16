@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
-// --- AQUI ESTÁ A CORREÇÃO BASEADA NO SEU PRINT ---
 import { supabase } from "./lib/supabaseClient"; 
 
 import Login from "./pages/Login";
@@ -25,28 +24,15 @@ import ClinicInfo from "./pages/ClinicInfo";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
-// --- O NOVO COMPONENTE "SEGURANÇA" ---
+// --- COMPONENTE DE PROTEÇÃO (VERSÃO BLINDADA) ---
 const ProtectedRoute = () => {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Verifica sessão atual ao carregar
-    const checkSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        setSession(session);
-      } catch (error) {
-        console.error("Erro ao verificar sessão:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkSession();
-
-    // 2. Escuta mudanças (login/logout) em tempo real
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Escuta o status da autenticação em tempo real
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // Só atualiza o estado quando o Supabase confirmar se tem sessão ou não
       setSession(session);
       setLoading(false);
     });
@@ -54,12 +40,12 @@ const ProtectedRoute = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  // O "CALMANTE": Enquanto carrega, mostra isso e NÃO redireciona
+  // Tela de Carregamento (Enquanto o Supabase não responde)
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#0f172a', color: 'white', flexDirection: 'column', gap: '10px' }}>
         <div style={{ width: '40px', height: '40px', border: '4px solid #3b82f6', borderTop: '4px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-        <p>Carregando MedX...</p>
+        <p>Carregando sistema...</p>
         <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -77,16 +63,15 @@ const ProtectedRoute = () => {
 const App = () => (
   <BrowserRouter>
     <Routes>
-      {/* --- ROTAS PÚBLICAS (Qualquer um acessa) --- */}
+      {/* Rotas Públicas */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       
-      {/* Redireciona a raiz para login ou dashboard */}
       <Route path="/" element={<Navigate to="/login" replace />} />
 
-      {/* --- ROTAS PROTEGIDAS (Só entra com crachá) --- */}
+      {/* Rotas Protegidas */}
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/agenda" element={<Agenda />} />
@@ -106,7 +91,6 @@ const App = () => (
         <Route path="/profile" element={<Profile />} />
       </Route>
 
-      {/* Rota de Erro */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>
