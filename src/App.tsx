@@ -24,7 +24,6 @@ import ClinicInfo from "./pages/ClinicInfo";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
-// --- PROTEÇÃO INTELIGENTE ---
 const ProtectedRoute = () => {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -34,14 +33,16 @@ const ProtectedRoute = () => {
 
     async function getInitialSession() {
       try {
-        // 1. AWAIT: Forçamos o código a esperar a leitura do cache antes de qualquer coisa
         const { data: { session } } = await supabase.auth.getSession();
+        
+        // TRUQUE DO SÓCIO: Pequeno delay artificial (500ms)
+        // Isso dá tempo do navegador processar o token antes de desistir
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         if (mounted) {
           if (session) {
             setSession(session);
           }
-          // 2. Só destravamos o loading AQUI, depois de ter certeza absoluta
           setLoading(false);
         }
       } catch (error) {
@@ -52,7 +53,6 @@ const ProtectedRoute = () => {
 
     getInitialSession();
 
-    // 3. O Escutador apenas atualiza a sessão se ela mudar, mas NÃO destrava o loading inicial
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (mounted) {
         setSession(session);
@@ -65,18 +65,18 @@ const ProtectedRoute = () => {
     };
   }, []);
 
-  // TELA DE CARREGAMENTO (Sala de Espera Obrigatória)
   if (loading) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#0f172a', color: 'white' }}>
-        <div style={{ width: '40px', height: '40px', border: '4px solid #3b82f6', borderTop: '4px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: '15px' }}></div>
-        <p style={{ fontFamily: 'sans-serif', fontSize: '14px', opacity: 0.8 }}>Verificando credenciais...</p>
+        {/* Adicionei o logo do MedX (Texto) pra ficar mais bonito enquanto carrega */}
+        <h2 style={{ fontFamily: 'sans-serif', marginBottom: '20px', fontSize: '24px', fontWeight: 'bold' }}>MedX</h2>
+        <div style={{ width: '40px', height: '40px', border: '3px solid #3b82f6', borderTop: '3px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+        <p style={{ fontFamily: 'sans-serif', fontSize: '12px', marginTop: '15px', opacity: 0.7 }}>Iniciando sistema...</p>
         <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
-  // Se passou pelo loading e a sessão continua vazia, aí sim redireciona
   if (!session) {
     return <Navigate to="/login" replace />;
   }
