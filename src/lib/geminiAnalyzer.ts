@@ -128,10 +128,12 @@ Analise agora o documento/imagem fornecido:`;
     const geminiMimeType = MIME_TYPE_MAP[file.type];
     
     // Lista de modelos para tentar (do mais recente ao mais antigo)
-    let modelsToTry = [
-  'gemini-1.5-flash',
-  'gemini-1.5-pro'
-];
+ let modelsToTry = [
+      'gemini-2.0-flash',        // Modelo padrão e inteligente de 2025
+      'gemini-1.5-flash',        // Modelo estável
+      'gemini-1.5-pro',          // Modelo de alta inteligência
+      'gemini-2.0-flash-001'     // Versão específica de lançamento
+    ];
     
    // ✅ CORREÇÃO DO SÓCIO: Tentar próximo modelo se der 404 OU 429 (Quota)
 
@@ -945,6 +947,7 @@ function calculateResponseRate(messages: Array<{ message: any; data_e_hora?: str
   const rate = Math.floor((iaResponses / humanMessages) * 100);
   return `${rate}%`;
 }
+
 
 
 
