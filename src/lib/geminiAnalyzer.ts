@@ -129,7 +129,7 @@ Analise agora o documento/imagem fornecido:`;
     
     // Lista de modelos para tentar (do mais recente ao mais antigo)
     let modelsToTry = [
-      'gemini-2.0-flash',
+      'gemini-1.5-flash',
       'gemini-2.0-flash-exp',
       'gemini-1.5-flash-latest',
       'gemini-1.5-flash-002',
@@ -141,10 +141,7 @@ Analise agora o documento/imagem fornecido:`;
     ];
     
    // ✅ CORREÇÃO DO SÓCIO: Tentar próximo modelo se der 404 OU 429 (Quota)
-if (response.status === 404 || response.status === 429) {
-  console.log(`⚠️ Modelo ${modelName} indisponível ou sem quota (${response.status}), tentando próximo...`);
-  continue;
-}
+
     
     let response: Response | null = null;
     let lastError: Error | null = null;
@@ -193,10 +190,11 @@ if (response.status === 404 || response.status === 429) {
           break;
         }
         
-        // Se for 404, tentar próximo modelo
-        if (response.status === 404) {
-          console.log(`⚠️ Modelo ${modelName} não disponível (404), tentando próximo...`);
-          continue;
+       // ✅ LUGAR CORRETO DA CORREÇÃO:
+        // Se for 404 (não existe) ou 429 (sem cota), ele pula para o próximo modelo
+        if (response.status === 404 || response.status === 429) {
+          console.log(`⚠️ Modelo ${modelName} indisponível ou sem cota (${response.status}), tentando próximo...`);
+          continue; 
         }
         
         // Outro erro, lançar exceção
@@ -954,5 +952,6 @@ function calculateResponseRate(messages: Array<{ message: any; data_e_hora?: str
   const rate = Math.floor((iaResponses / humanMessages) * 100);
   return `${rate}%`;
 }
+
 
 
