@@ -152,7 +152,7 @@ Analise agora o documento/imagem fornecido:`;
         console.log(`🔄 Tentando modelo: ${modelName}...`);
         
         response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiApiKey}`,
+          `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${geminiApiKey}`,
           {
             method: 'POST',
             headers: {
@@ -952,6 +952,7 @@ function calculateResponseRate(messages: Array<{ message: any; data_e_hora?: str
   const rate = Math.floor((iaResponses / humanMessages) * 100);
   return `${rate}%`;
 }
+
 
 
 
