@@ -140,14 +140,11 @@ Analise agora o documento/imagem fornecido:`;
       'gemini-pro',
     ];
     
-    // Se houver modelo preferido configurado, tentar ele primeiro
-    if (preferredModel && !modelsToTry.includes(preferredModel)) {
-      console.log(`➕ Adicionando modelo preferido ao início da lista: ${preferredModel}`);
-      modelsToTry = [preferredModel, ...modelsToTry];
-    } else if (preferredModel) {
-      // Se já está na lista, mover para o início
-      modelsToTry = [preferredModel, ...modelsToTry.filter(m => m !== preferredModel)];
-    }
+   // ✅ CORREÇÃO DO SÓCIO: Tentar próximo modelo se der 404 OU 429 (Quota)
+if (response.status === 404 || response.status === 429) {
+  console.log(`⚠️ Modelo ${modelName} indisponível ou sem quota (${response.status}), tentando próximo...`);
+  continue;
+}
     
     let response: Response | null = null;
     let lastError: Error | null = null;
@@ -957,4 +954,5 @@ function calculateResponseRate(messages: Array<{ message: any; data_e_hora?: str
   const rate = Math.floor((iaResponses / humanMessages) * 100);
   return `${rate}%`;
 }
+
 
