@@ -129,16 +129,9 @@ Analise agora o documento/imagem fornecido:`;
     
     // Lista de modelos para tentar (do mais recente ao mais antigo)
     let modelsToTry = [
-      'gemini-1.5-flash',
-      'gemini-2.0-flash-exp',
-      'gemini-1.5-flash-latest',
-      'gemini-1.5-flash-002',
-      'gemini-1.5-flash',
-      'gemini-1.5-pro-latest',
-      'gemini-1.5-pro',
-      'gemini-pro-vision',
-      'gemini-pro',
-    ];
+  'gemini-1.5-flash',
+  'gemini-1.5-pro'
+];
     
    // ✅ CORREÇÃO DO SÓCIO: Tentar próximo modelo se der 404 OU 429 (Quota)
 
@@ -952,6 +945,7 @@ function calculateResponseRate(messages: Array<{ message: any; data_e_hora?: str
   const rate = Math.floor((iaResponses / humanMessages) * 100);
   return `${rate}%`;
 }
+
 
 
 
