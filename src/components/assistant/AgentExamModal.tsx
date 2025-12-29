@@ -113,16 +113,29 @@ export function AgentExamModal({ open, onOpenChange }: AgentExamModalProps) {
     setResultado(null);
 
     try {
-      console.log('🚀 Iniciando análise do exame com Gemini Flash...');
+      console.log('🚀 Enviando exame para o n8n processar...');
       
-      // Analisar exame usando Gemini Flash
-      const examData = await analyzeExamWithGemini(selectedFile);
+      // Criamos o formulário para enviar o arquivo real (binário)
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      // Chamamos o SEU webhook do n8n que já está pronto
+      const response = await fetch('https://webhook.ia8d.com/webhook/agent-exame', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error('Falha na comunicação com o servidor de análise');
+
+      const examData = await response.json();
       
-      // Validar que temos conteúdo
-      if (!examData.output && !examData.analise) {
-        console.error('Resposta do Gemini está incompleta:', examData);
-        throw new Error('A análise do Gemini está incompleta');
-      }
+      // O n8n devolve o resultado da Isis
+      console.log('✅ Análise recebida do n8n!');
+      setResultado(examData);
+      
+      toast.success('Exame analisado com sucesso!');
+    } catch (err) {
+      // ... mantém o restante do tratamento de erro que já existe
       
       console.log('✅ Análise completa! Tamanho:', examData.output?.length || 0, 'caracteres');
       setResultado(examData);
@@ -752,3 +765,4 @@ export function AgentExamModal({ open, onOpenChange }: AgentExamModalProps) {
     </Dialog>
   );
 }
+
