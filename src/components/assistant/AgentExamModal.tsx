@@ -102,7 +102,6 @@ export function AgentExamModal({ open, onOpenChange }: AgentExamModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!selectedFile) {
       setError('Por favor, selecione um arquivo');
       return;
@@ -115,41 +114,31 @@ export function AgentExamModal({ open, onOpenChange }: AgentExamModalProps) {
     try {
       console.log('🚀 Enviando exame para o n8n processar...');
       
-      // Criamos o formulário para enviar o arquivo real (binário)
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      // Chamamos o SEU webhook do n8n que já está pronto
+      // Chamada para o seu Webhook do n8n
       const response = await fetch('https://webhook.ia8d.com/webhook/agent-exame', {
         method: 'POST',
         body: formData,
       });
 
-      if (!response.ok) throw new Error('Falha na comunicação com o servidor de análise');
+      if (!response.ok) {
+        throw new Error('Falha na comunicação com o servidor de análise');
+      }
 
       const examData = await response.json();
       
-      // O n8n devolve o resultado da Isis
       console.log('✅ Análise recebida do n8n!');
       setResultado(examData);
       
       toast.success('Exame analisado com sucesso!');
     } catch (err) {
-      // ... mantém o restante do tratamento de erro que já existe
-      
-      console.log('✅ Análise completa! Tamanho:', examData.output?.length || 0, 'caracteres');
-      setResultado(examData);
-      
-      toast.success('Exame analisado com sucesso!');
-    } catch (err) {
       console.error('❌ Erro ao analisar exame:', err);
-      
       let errorMessage = 'Erro ao analisar exame. Tente novamente.';
       
       if (err instanceof Error) {
         errorMessage = err.message;
-      } else if (typeof err === 'string') {
-        errorMessage = err;
       }
       
       setError(errorMessage);
@@ -765,4 +754,5 @@ export function AgentExamModal({ open, onOpenChange }: AgentExamModalProps) {
     </Dialog>
   );
 }
+
 
