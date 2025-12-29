@@ -128,11 +128,11 @@ Analise agora o documento/imagem fornecido:`;
     const geminiMimeType = MIME_TYPE_MAP[file.type];
     
     // Lista de modelos para tentar (do mais recente ao mais antigo)
- let modelsToTry = [
-      'gemini-2.0-flash',        // Modelo padrão e inteligente de 2025
-      'gemini-1.5-flash',        // Modelo estável
-      'gemini-1.5-pro',          // Modelo de alta inteligência
-      'gemini-2.0-flash-001'     // Versão específica de lançamento
+
+    let modelsToTry = [
+      'gemini-1.5-flash',
+      'gemini-1.5-pro',
+      'gemini-2.0-flash-exp'
     ];
     
    // ✅ CORREÇÃO DO SÓCIO: Tentar próximo modelo se der 404 OU 429 (Quota)
@@ -147,7 +147,7 @@ Analise agora o documento/imagem fornecido:`;
         console.log(`🔄 Tentando modelo: ${modelName}...`);
         
         response = await fetch(
-          `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${geminiApiKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiApiKey}`,
           {
             method: 'POST',
             headers: {
@@ -588,13 +588,9 @@ ${conversationText}
     console.log('🚀 [analyzeConversation] Iniciando requisições para Gemini API...');
     
     const modelsToTry = [
-      'gemini-2.0-flash',
-      'gemini-2.0-flash-exp',
-      'gemini-1.5-flash-latest',
-      'gemini-1.5-flash-002',
       'gemini-1.5-flash',
-      'gemini-1.5-pro-latest',
       'gemini-1.5-pro',
+      'gemini-2.0-flash-exp'
     ];
     
     console.log('📋 [analyzeConversation] Modelos a tentar:', modelsToTry);
@@ -638,8 +634,9 @@ ${conversationText}
           break;
         }
         
-        if (response.status === 404) {
-          console.log(`⚠️ Modelo ${modelName} não disponível (404), tentando próximo...`);
+        // ✅ VACINA APLICADA:
+        if (response.status === 404 || response.status === 429) {
+          console.log(`⚠️ Modelo ${modelName} indisponível ou sem cota (${response.status}), tentando próximo...`);
           continue;
         }
         
@@ -947,6 +944,7 @@ function calculateResponseRate(messages: Array<{ message: any; data_e_hora?: str
   const rate = Math.floor((iaResponses / humanMessages) * 100);
   return `${rate}%`;
 }
+
 
 
 
