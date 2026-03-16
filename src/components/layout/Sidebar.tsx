@@ -138,9 +138,10 @@ export const Sidebar = () => {
       {/* Collapse Toggle Button */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-10 bg-sidebar-border text-sidebar-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity z-50 border border-sidebar-background hover:bg-sidebar-primary hover:text-white"
+        className="absolute -right-3 top-10 bg-sidebar-primary text-sidebar-primary-foreground rounded-full p-1.5 shadow-lg z-50 border-2 border-sidebar-background hover:scale-110 transition-all duration-200"
+        aria-label={isCollapsed ? "Expandir menu" : "Recolher menu"}
       >
-        {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+        {isCollapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
       </button>
 
       {/* Logo */}
