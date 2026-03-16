@@ -107,49 +107,42 @@ export function AgentCIDModal({ open, onOpenChange }: AgentCIDModalProps) {
       console.log('Resposta bruta da AI (CID):', rawData);
       
       let cidData: CIDData | null = null;
+      const dataWithOutput = Array.isArray(rawData) ? rawData[0] : rawData;
       
-      try {
-        // A API pode retornar em diferentes formatos:
-        // Formato 1: { output: "```json\n{...}\n```" }
-        // Formato 2: { output: "{...}" }
-        // Formato 3: { codigo_cid: "...", ... } (objeto direto)
-        // Formato 4: [{ output: "..." }] (array)
-        
-        const dataWithOutput = Array.isArray(rawData) ? rawData[0] : rawData;
-        
-        if (dataWithOutput && dataWithOutput.output && typeof dataWithOutput.output === 'string') {
-          let cleanOutput = dataWithOutput.output.trim();
-          
-          // Limpar blocos de código Markdown se existirem
-          if (cleanOutput.includes('```')) {
-            const match = cleanOutput.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-            if (match && match[1]) {
-              cleanOutput = match[1].trim();
-            } else {
-              // Fallback: remover aspas triplas se o regex falhar mas elas existirem
-              cleanOutput = cleanOutput.replace(/```json/g, '').replace(/```/g, '').trim();
-            }
-          }
-          
-          cidData = JSON.parse(cleanOutput);
-        } else if (dataWithOutput && dataWithOutput.codigo_cid) {
-          cidData = dataWithOutput;
-        } else if (dataWithOutput && dataWithOutput.success === true && !dataWithOutput.output) {
-          // Caso onde o n8n retorna { success: true } mas o AI Agent falhou ou não enviou dados
-          throw new Error('O servidor retornou sucesso, mas sem dados de diagnóstico. Tente refinar sua busca.');
-        } else {
-          console.error('Formato não reconhecido:', rawData);
-          throw new Error('Formato de resposta inválido');
-        }
+      console.log('Agente CID - Processando dado:', dataWithOutput);
 
-        if (cidData) {
-          setResultado(cidData);
+      if (dataWithOutput && dataWithOutput.output) {
+        let cleanOutput = String(dataWithOutput.output).trim();
+        
+        // Limpar blocos de código Markdown de forma robusta (```json ... ``` ou ``` ... ```)
+        if (cleanOutput.includes('```')) {
+          // Remove aspas triplas e o identificador de linguagem (opcional)
+          cleanOutput = cleanOutput.replace(/```(?:json)?\s*([\s\S]*?)\s*```/g, '$1').trim();
+          // Fallback caso ainda restem aspas triplas isoladas
+          cleanOutput = cleanOutput.replace(/```/g, '').trim();
         }
-      } catch (parseError) {
-        console.error('Erro ao parsear resposta:', parseError, 'Dados brutos:', rawData);
-        throw new Error('Erro ao processar resposta do servidor. Tente novamente com termos mais específicos.');
+        
+        // Tentar parsear se for uma string JSON
+        try {
+          cidData = JSON.parse(cleanOutput);
+        } catch (e) {
+          console.warn('Falha ao parsear output como JSON, tentando usar como objeto direto');
+          if (typeof dataWithOutput.output === 'object') {
+            cidData = dataWithOutput.output;
+          }
+        }
+      } else if (dataWithOutput && dataWithOutput.codigo_cid) {
+        // Já é o objeto direto
+        cidData = dataWithOutput;
       }
-    } catch (err) {
+
+      if (!cidData) {
+        console.error('Não foi possível extrair dados de CID da resposta:', rawData);
+        throw new Error('O servidor retornou uma resposta em formato inesperado.');
+      }
+
+      setResultado(cidData);
+    } catch (err: any) {
       console.error('Erro ao buscar CID:', err);
       setError(
         err instanceof Error 

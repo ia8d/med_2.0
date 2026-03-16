@@ -245,8 +245,8 @@ export default function WhatsApp() {
 
   useEffect(() => {
     const channel = supabase
-      .channel('realtime:medx_history-ui')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'medx_history' }, (payload) => {
+      .channel('realtime:messages-ui')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
         queryClient.invalidateQueries({ queryKey: ['medx_sessions'] });
         const sid = (payload.new as any)?.session_id as string | undefined;
         if (sid && sid === selectedSessionId) {

@@ -894,7 +894,9 @@ export default function Agenda() {
 
     setIsSaving(true);
     try {
-      await saveAllSchedules(localSchedules);
+      // Converte o objeto de horários local para um array antes de salvar
+      const schedulesArray = Object.values(localSchedules);
+      await saveAllSchedules(schedulesArray);
       toast.success('Horários salvos com sucesso!');
     } catch (error: any) {
       toast.error('Erro ao salvar horários: ' + error.message);
