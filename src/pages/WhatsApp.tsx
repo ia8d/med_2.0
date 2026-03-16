@@ -7,11 +7,11 @@ import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabaseClient';
-import { listMedxSessions, listMessagesBySession, extractMessageText, MedxHistoryRow } from '@/lib/medxHistory';
+import { listMedxSessions, listMessagesBySession, extractMessageText, MedxHistoryRow, markSessionAsRead, updateSessionCategory } from '@/lib/medxHistory';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { User, Play, Pause, FileText, Bell, Stethoscope, Send, Loader2, Paperclip, Mic, Image } from 'lucide-react';
+import { User, Play, Pause, FileText, Bell, Stethoscope, Send, Loader2, Paperclip, Mic, Image, Check, CheckCheck, MessageSquare, Calendar, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 import { SummaryModal } from '@/components/whatsapp/SummaryModal';
@@ -213,6 +213,27 @@ export default function WhatsApp() {
 
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [tab, setTab] = useState<'pre' | 'crm' | 'all'>('all');
+  const [subTab, setSubTab] = useState<'atendimento' | 'agendamento' | 'administrativo'>('atendimento');
+
+  const handleMarkAsRead = async (sessionId: string) => {
+    try {
+      await markSessionAsRead(sessionId);
+      queryClient.invalidateQueries({ queryKey: ['medx_sessions'] });
+      toast.success('Conversa marcada como lida');
+    } catch (error) {
+      toast.error('Erro ao marcar como lida');
+    }
+  };
+
+  const handleUpdateCategory = async (sessionId: string, cat: 'atendimento' | 'agendamento' | 'administrativo') => {
+    try {
+      await updateSessionCategory(sessionId, cat);
+      queryClient.invalidateQueries({ queryKey: ['medx_sessions'] });
+      toast.success(`Movido para ${cat}`);
+    } catch (error) {
+      toast.error('Erro ao mover conversa');
+    }
+  };
 
   // Listas mínimas de pacientes e pré-pacientes para classificar as sessões dinamicamente
   const { data: patientsMin = [] } = useQuery({
@@ -785,6 +806,10 @@ export default function WhatsApp() {
     let list = classifiedSessions;
     if (tab === 'pre') list = list.filter((s: any) => s.kind === 'pre_patient');
     if (tab === 'crm') list = list.filter((s: any) => s.kind === 'patient');
+    
+    // Filtro por sub-aba (categoria) e apenas não lidas (opcional, ou apenas categoria)
+    list = list.filter((s: any) => (s.category || 'atendimento') === subTab);
+    
     if (!term) return list;
     return list.filter((s: any) => {
       const name = (s.displayName ?? '').toLowerCase();
@@ -807,22 +832,46 @@ export default function WhatsApp() {
               <div className="px-3 pt-4 pb-3">
                 <div className="flex gap-2 mb-3">
                   <button
-                    className={`text-xs px-3 py-1.5 rounded-full ${tab === 'all' ? 'bg-accent' : 'hover:bg-accent/50'}`}
+                    className={`text-xs px-3 py-1.5 rounded-full ${tab === 'all' ? 'bg-accent text-white' : 'hover:bg-accent/50'}`}
                     onClick={() => setTab('all')}
                   >
                     Todos
                   </button>
                   <button
-                    className={`text-xs px-3 py-1.5 rounded-full ${tab === 'pre' ? 'bg-accent' : 'hover:bg-accent/50'}`}
+                    className={`text-xs px-3 py-1.5 rounded-full ${tab === 'pre' ? 'bg-amber-100 text-amber-900 border border-amber-200' : 'hover:bg-accent/50'}`}
                     onClick={() => setTab('pre')}
                   >
                     Pré Pacientes
                   </button>
                   <button
-                    className={`text-xs px-3 py-1.5 rounded-full ${tab === 'crm' ? 'bg-accent' : 'hover:bg-accent/50'}`}
+                    className={`text-xs px-3 py-1.5 rounded-full ${tab === 'crm' ? 'bg-emerald-100 text-emerald-900 border border-emerald-200' : 'hover:bg-accent/50'}`}
                     onClick={() => setTab('crm')}
                   >
-                    Pacientes CRM
+                    Pacientes
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between gap-1 mb-4 bg-muted/30 p-1 rounded-lg border border-border/50">
+                  <button
+                    onClick={() => setSubTab('atendimento')}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[11px] font-medium transition-all ${subTab === 'atendimento' ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                  >
+                    <MessageSquare className="w-3 h-3" />
+                    Atendimento
+                  </button>
+                  <button
+                    onClick={() => setSubTab('agendamento')}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[11px] font-medium transition-all ${subTab === 'agendamento' ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                  >
+                    <Calendar className="w-3 h-3" />
+                    Agendas
+                  </button>
+                  <button
+                    onClick={() => setSubTab('administrativo')}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[11px] font-medium transition-all ${subTab === 'administrativo' ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                  >
+                    <ShieldCheck className="w-3 h-3" />
+                    Admin
                   </button>
                 </div>
                 <Input
@@ -841,33 +890,56 @@ export default function WhatsApp() {
                   )}
                   {filteredSessions.map((s) => {
                     const active = s.sessionId === selectedSessionId;
+                    const isUnread = s.is_read === false;
                     return (
-                      <button
-                        key={s.sessionId}
-                        onClick={() => setSelectedSessionId(s.sessionId)}
-                        className={`block w-[98%] max-w-[325px] text-left px-2 py-2 rounded-xl transition-colors border-l-4 ${
-                          s.kind === 'pre_patient' ? 'border-amber-400' : s.kind === 'patient' ? 'border-emerald-400' : 'border-muted'
-                        } ${active ? 'bg-accent' : 'hover:bg-accent/50'}`}
-                        style={{ boxSizing: 'border-box' }}
-                      >
-                        <div className="flex items-center gap-2">
-                          <Avatar className={`h-8 w-8 shrink-0 ${s.kind === 'pre_patient' ? 'bg-amber-100' : 'bg-primary/10'}`}>
-                            <AvatarFallback className={`${s.kind === 'pre_patient' ? 'text-amber-700' : 'text-primary'}`}>
-                              {s.kind === 'pre_patient' ? (
-                                <User className="w-3.5 h-3.5" />
-                              ) : (
-                                (s.displayName?.[0] ?? s.sessionId?.[0] ?? '').toUpperCase()
-                              )}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="min-w-0 flex-1 overflow-hidden">
-                            <div className="text-sm font-medium truncate">{s.kind === 'pre_patient' ? 'Pré Paciente' : (s.displayName ?? s.sessionId)}</div>
-                            <div className={`text-[10px] font-medium ${s.kind === 'pre_patient' ? 'text-amber-700' : s.kind === 'patient' ? 'text-emerald-700' : 'text-slate-500'}`}>{s.kind === 'pre_patient' ? 'Pré Paciente' : s.kind === 'patient' ? 'Paciente' : 'Desconhecido'}</div>
-                            <div className="text-xs text-white truncate">{s.lastMessagePreview}</div>
+                      <div key={s.sessionId} className="relative group">
+                        <button
+                          onClick={() => {
+                            setSelectedSessionId(s.sessionId);
+                            if (isUnread) handleMarkAsRead(s.sessionId);
+                          }}
+                          className={`block w-full text-left px-2 py-2 rounded-xl transition-colors border-l-4 ${
+                            isUnread ? 'bg-primary/5' : ''
+                          } ${
+                            s.kind === 'pre_patient' ? 'border-amber-400' : s.kind === 'patient' ? 'border-emerald-400' : 'border-muted'
+                          } ${active ? 'bg-accent' : 'hover:bg-accent/50'}`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <Avatar className={`h-8 w-8 shrink-0 ${s.kind === 'pre_patient' ? 'bg-amber-100' : 'bg-primary/10'}`}>
+                              <AvatarFallback className={`${s.kind === 'pre_patient' ? 'text-amber-700' : 'text-primary'}`}>
+                                {s.kind === 'pre_patient' ? (
+                                  <User className="w-3.5 h-3.5" />
+                                ) : (
+                                  (s.displayName?.[0] ?? s.sessionId?.[0] ?? '').toUpperCase()
+                                )}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="min-w-0 flex-1 overflow-hidden">
+                              <div className="flex items-center justify-between">
+                                <div className="text-sm font-medium truncate">{s.kind === 'pre_patient' ? 'Pré Paciente' : (s.displayName ?? s.sessionId)}</div>
+                                {isUnread && <div className="w-2 h-2 rounded-full bg-primary shrink-0" />}
+                              </div>
+                              <div className={`text-[10px] font-medium ${s.kind === 'pre_patient' ? 'text-amber-700' : s.kind === 'patient' ? 'text-emerald-700' : 'text-slate-500'}`}>{s.kind === 'pre_patient' ? 'Pré Paciente' : s.kind === 'patient' ? 'Paciente' : 'Desconhecido'}</div>
+                              <div className={`text-xs truncate ${isUnread ? 'text-foreground font-medium' : 'text-white'}`}>{s.lastMessagePreview}</div>
+                            </div>
+                            <div className="text-[11px] text-white shrink-0 ml-1">{s.totalMessages}</div>
                           </div>
-                          <div className="text-[11px] text-white shrink-0 ml-1">{s.totalMessages}</div>
-                        </div>
-                      </button>
+                        </button>
+                        
+                        {/* Botão de Visto rápido ao passar o mouse */}
+                        {isUnread && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleMarkAsRead(s.sessionId);
+                            }}
+                            className="absolute right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-background border rounded-full p-1 shadow-sm hover:text-primary"
+                            title="Marcar como lido"
+                          >
+                            <CheckCheck className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
                     );
                   })}
                 </div>

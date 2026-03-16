@@ -55,6 +55,7 @@ export function PatientDetailModal({ patientId, open, onOpenChange }: PatientDet
     examHistory,
     attachments,
     agentExams,
+    agentCIDs,
     doctors,
     loading,
     error,
@@ -456,6 +457,57 @@ export function PatientDetailModal({ patientId, open, onOpenChange }: PatientDet
                       </div>
                     )}
                     
+                    {/* Diagnósticos do Agent CID */}
+                    {agentCIDs.length > 0 && (
+                      <div className="mt-8">
+                        <h3 className="font-semibold mb-4 flex items-center gap-2">
+                          <span className="text-blue-500">🧠</span>
+                          Diagnósticos AI (CID) ({agentCIDs.length})
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {agentCIDs.map((cid) => (
+                            <div
+                              key={cid.id}
+                              className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-gradient-to-br from-blue-500/5 to-cyan-500/5"
+                            >
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <div className="p-2 rounded-lg bg-blue-500/10">
+                                    <ShieldCheck className="w-4 h-4 text-blue-500" />
+                                  </div>
+                                  <div>
+                                    <p className="font-medium text-sm">
+                                      {cid.consultation_output?.cid || 'Diagnóstico Gerado'}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                      AI Agent CID
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {cid.consultation_output?.conduta && (
+                                <p className="text-xs text-muted-foreground line-clamp-3 mb-3">
+                                  <strong>Conduta:</strong> {cid.consultation_output.conduta}
+                                </p>
+                              )}
+                              
+                              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                <span>
+                                  {new Date(cid.consultation_date).toLocaleDateString('pt-BR')}
+                                </span>
+                                {cid.doctor && (
+                                  <span className="font-medium">
+                                    Dr(a). {cid.doctor.name}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {/* Arquivos Anexados Manualmente */}
                     {visibleAttachments.length > 0 && (
                       <div>

@@ -132,6 +132,7 @@ export interface PatientData {
   examHistory: ExamHistory[];
   attachments: MedicalAttachment[];
   agentExams: AgentExam[];
+  agentCIDs: AgentExam[];
   doctors: any[];
 }
 
@@ -144,6 +145,7 @@ export function usePatientData(patientId: string | null) {
     examHistory: [],
     attachments: [],
     agentExams: [],
+    agentCIDs: [],
     doctors: [],
   });
   const [loading, setLoading] = useState(false);
@@ -159,6 +161,7 @@ export function usePatientData(patientId: string | null) {
         examHistory: [],
         attachments: [],
         agentExams: [],
+        agentCIDs: [],
         doctors: [],
       });
       return;
@@ -236,10 +239,23 @@ export function usePatientData(patientId: string | null) {
           doctor:profiles!agent_consultations_doctor_id_fkey(name)
         `)
         .eq('patient_id', patientId)
-        .eq('agent_type', 'exams') // Plural conforme definido no CHECK constraint
+        .eq('agent_type', 'exams')
         .order('consultation_date', { ascending: false });
 
       if (agentExamsError) throw agentExamsError;
+
+      // Buscar diagnósticos do Agent CID
+      const { data: agentCIDsData, error: agentCIDsError } = await supabase
+        .from('agent_consultations')
+        .select(`
+          *,
+          doctor:profiles!agent_consultations_doctor_id_fkey(name)
+        `)
+        .eq('patient_id', patientId)
+        .eq('agent_type', 'cid')
+        .order('consultation_date', { ascending: false });
+
+      if (agentCIDsError) throw agentCIDsError;
 
       // Buscar médicos relacionados
       const { data: doctorsData, error: doctorsError } = await supabase
@@ -260,6 +276,7 @@ export function usePatientData(patientId: string | null) {
         examHistory: examsData || [],
         attachments: attachmentsData || [],
         agentExams: agentExamsData || [],
+        agentCIDs: agentCIDsData || [],
         doctors: doctorsData || [],
       });
     } catch (err: any) {

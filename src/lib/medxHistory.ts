@@ -16,6 +16,8 @@ export type MedxSession = {
   lastMessagePreview: string;
   kind?: 'patient' | 'pre_patient' | 'unknown';
   displayName?: string;
+  is_read?: boolean;
+  category?: 'atendimento' | 'agendamento' | 'administrativo';
 };
 
 export function extractMessageText(message: any): string {
@@ -35,7 +37,7 @@ export function extractMessageText(message: any): string {
 export async function listMedxSessions(limitRows: number = 500): Promise<MedxSession[]> {
   const { data, error } = await supabase
     .from('messages')
-    .select('id, session_id, message')
+    .select('id, session_id, message, is_read, category')
     .order('id', { ascending: false })
     .limit(limitRows);
 
@@ -52,6 +54,8 @@ export async function listMedxSessions(limitRows: number = 500): Promise<MedxSes
         totalMessages: 1,
         lastMessageId: row.id,
         lastMessagePreview: preview,
+        is_read: row.is_read ?? true,
+        category: row.category ?? 'atendimento',
       });
     } else {
       existing.totalMessages += 1;
@@ -116,6 +120,25 @@ export async function listMessagesBySession(sessionId: string): Promise<MedxHist
     media: row.media_url,
     sender_name: row.sender_name
   })) as MedxHistoryRow[];
+}
+
+export async function markSessionAsRead(sessionId: string): Promise<void> {
+  const { error } = await supabase
+    .from('messages')
+    .update({ is_read: true })
+    .eq('session_id', sessionId)
+    .eq('is_read', false); // Só atualiza as que estão como não lidas
+
+  if (error) throw error;
+}
+
+export async function updateSessionCategory(sessionId: string, category: 'atendimento' | 'agendamento' | 'administrativo'): Promise<void> {
+  const { error } = await supabase
+    .from('messages')
+    .update({ category })
+    .eq('session_id', sessionId);
+
+  if (error) throw error;
 }
 
 
