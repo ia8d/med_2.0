@@ -404,14 +404,14 @@ export default function Teleconsulta() {
           .from('teleconsultations')
           .select(
             `id, appointment_id, start_time, end_time, status, meeting_url,
-             appointments!inner(id, scheduled_at, patient_id, doctor_id,
+             appointments!inner(id, appointment_date, patient_id, doctor_id,
                patients:patient_id(name, phone),
                doctor_profile:doctor_id(name)
              )`
           )
           .eq('status', 'scheduled')
-          .gte('appointments.scheduled_at', nowIso)
-          .order('scheduled_at', { ascending: true, foreignTable: 'appointments' })
+          .gte('appointments.appointment_date', nowIso)
+          .order('appointment_date', { ascending: true, foreignTable: 'appointments' })
           .limit(8);
 
         if (error) throw error;
@@ -497,7 +497,7 @@ export default function Teleconsulta() {
             <div className="space-y-3">
               {upcoming.map((t) => {
                 const appt = (t as any).appointments;
-                const when = appt?.scheduled_at ? new Date(appt.scheduled_at) : (t.start_time ? new Date(t.start_time) : null);
+                const when = appt?.appointment_date ? new Date(appt.appointment_date) : (t.start_time ? new Date(t.start_time) : null);
                 const patientName = appt?.patients?.name || 'Paciente';
                 const patientPhone = appt?.patients?.phone || null;
                 const doctorName = appt?.doctor_profile?.name || 'Médico(a)';
