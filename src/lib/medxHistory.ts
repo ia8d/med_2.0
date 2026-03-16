@@ -36,7 +36,7 @@ export function extractMessageText(message: any): string {
 
 export async function listMedxSessions(limitRows: number = 500): Promise<MedxSession[]> {
   const { data, error } = await supabase
-    .from('messages')
+    .from('medx_history')
     .select('id, session_id, message, is_read, category')
     .order('id', { ascending: false })
     .limit(limitRows);
@@ -105,7 +105,7 @@ export async function listMedxSessions(limitRows: number = 500): Promise<MedxSes
 
 export async function listMessagesBySession(sessionId: string): Promise<MedxHistoryRow[]> {
   const { data, error } = await supabase
-    .from('messages')
+    .from('medx_history')
     .select('id, session_id, message, created_at, media_url, sender_name')
     .eq('session_id', sessionId)
     .order('id', { ascending: true });
@@ -124,7 +124,7 @@ export async function listMessagesBySession(sessionId: string): Promise<MedxHist
 
 export async function markSessionAsRead(sessionId: string): Promise<void> {
   const { error } = await supabase
-    .from('messages')
+    .from('medx_history')
     .update({ is_read: true })
     .eq('session_id', sessionId)
     .eq('is_read', false); // Só atualiza as que estão como não lidas
@@ -134,7 +134,7 @@ export async function markSessionAsRead(sessionId: string): Promise<void> {
 
 export async function updateSessionCategory(sessionId: string, category: 'atendimento' | 'agendamento' | 'administrativo'): Promise<void> {
   const { error } = await supabase
-    .from('messages')
+    .from('medx_history')
     .update({ category })
     .eq('session_id', sessionId);
 

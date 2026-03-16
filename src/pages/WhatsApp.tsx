@@ -214,6 +214,40 @@ export default function WhatsApp() {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [tab, setTab] = useState<'pre' | 'crm' | 'all'>('all');
   const [subTab, setSubTab] = useState<'atendimento' | 'agendamento' | 'administrativo'>('atendimento');
+  const [syncing, setSyncing] = useState(false);
+
+  useEffect(() => {
+    const triggerSync = async () => {
+      if (syncing) return;
+      setSyncing(true);
+      try {
+        const baseUrl = await getApiBaseUrl();
+        const webhookUrl = baseUrl.replace('/webhook/', '/webhook-test/') 
+          ? baseUrl.replace(/\/webhook\/?$/, '/webhook/sincronizar-chats')
+          : baseUrl.replace(/\/webhook-test\/?$/, '/webhook-test/sincronizar-chats');
+
+        // Note: adjust if your baseUrl logic already handles trailing slashes or full paths
+        const finalUrl = baseUrl.endsWith('/') 
+          ? `${baseUrl}sincronizar-chats` 
+          : `${baseUrl}/sincronizar-chats`;
+
+        console.log('Disparando sincronização de chats:', finalUrl);
+        
+        await fetch(finalUrl, { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        queryClient.invalidateQueries({ queryKey: ['medx_sessions'] });
+      } catch (error) {
+        console.error('Erro ao sincronizar chats:', error);
+      } finally {
+        setSyncing(false);
+      }
+    };
+
+    triggerSync();
+  }, [queryClient]);
 
   const handleMarkAsRead = async (sessionId: string) => {
     try {
