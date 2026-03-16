@@ -32,6 +32,7 @@ import {
   Clock,
   Clipboard,
   Upload,
+  ShieldCheck,
 } from 'lucide-react';
 
 interface PatientDetailModalProps {
