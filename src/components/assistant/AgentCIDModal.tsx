@@ -103,14 +103,51 @@ export function AgentCIDModal({ open, onOpenChange }: AgentCIDModalProps) {
         throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
       }
 
-      const data: CIDResponse = await response.json();
+      const rawData = await response.json();
+      console.log('Resposta bruta da AI (CID):', rawData);
       
-      // Parsear o campo output que vem como string JSON
+      let cidData: CIDData | null = null;
+      
       try {
-        const cidData: CIDData = JSON.parse(data.output);
-        setResultado(cidData);
+        // A API pode retornar em diferentes formatos:
+        // Formato 1: { output: "```json\n{...}\n```" }
+        // Formato 2: { output: "{...}" }
+        // Formato 3: { codigo_cid: "...", ... } (objeto direto)
+        // Formato 4: [{ output: "..." }] (array)
+        
+        const dataWithOutput = Array.isArray(rawData) ? rawData[0] : rawData;
+        
+        if (dataWithOutput && dataWithOutput.output && typeof dataWithOutput.output === 'string') {
+          let cleanOutput = dataWithOutput.output.trim();
+          
+          // Limpar blocos de código Markdown se existirem
+          if (cleanOutput.includes('```')) {
+            const match = cleanOutput.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+            if (match && match[1]) {
+              cleanOutput = match[1].trim();
+            } else {
+              // Fallback: remover aspas triplas se o regex falhar mas elas existirem
+              cleanOutput = cleanOutput.replace(/```json/g, '').replace(/```/g, '').trim();
+            }
+          }
+          
+          cidData = JSON.parse(cleanOutput);
+        } else if (dataWithOutput && dataWithOutput.codigo_cid) {
+          cidData = dataWithOutput;
+        } else if (dataWithOutput && dataWithOutput.success === true && !dataWithOutput.output) {
+          // Caso onde o n8n retorna { success: true } mas o AI Agent falhou ou não enviou dados
+          throw new Error('O servidor retornou sucesso, mas sem dados de diagnóstico. Tente refinar sua busca.');
+        } else {
+          console.error('Formato não reconhecido:', rawData);
+          throw new Error('Formato de resposta inválido');
+        }
+
+        if (cidData) {
+          setResultado(cidData);
+        }
       } catch (parseError) {
-        throw new Error('Erro ao processar resposta do servidor');
+        console.error('Erro ao parsear resposta:', parseError, 'Dados brutos:', rawData);
+        throw new Error('Erro ao processar resposta do servidor. Tente novamente com termos mais específicos.');
       }
     } catch (err) {
       console.error('Erro ao buscar CID:', err);
