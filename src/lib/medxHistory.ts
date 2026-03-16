@@ -4,9 +4,11 @@ export type MedxHistoryRow = {
   id: number;
   session_id: string;
   message: any;
-  created_at?: string;
-  media_url?: string | null;
+  data_e_hora?: string;
+  media?: string | null;
   sender_name?: string | null;
+  created_at?: string; // Mantendo para compatibilidade se necessário
+  media_url?: string | null; // Mantendo para compatibilidade se necessário
 };
 
 export type MedxSession = {

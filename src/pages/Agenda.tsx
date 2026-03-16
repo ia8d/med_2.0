@@ -269,7 +269,7 @@ export default function Agenda() {
           // Remove objetos vazios ou sem ID/summary
           return event && (event.id || event.eventId) && (event.summary || event.title);
         })
-        .map((event: any, index: number) => {
+        .map((event: any, index: number): Appointment | null => {
           // Processa a data do evento
           let scheduledAt: string;
           let isAllDayEvent = false;
