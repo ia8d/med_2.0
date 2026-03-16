@@ -8,7 +8,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { MagicBentoCard } from '@/components/bento/MagicBento';
-import Particles from '@/components/backgrounds/Particles';
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -45,16 +44,6 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-background p-4 relative overflow-hidden">
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-30">
-        <Particles
-          particleCount={100}
-          particleColor="#5227FF"
-          particleSize={3}
-          speed={0.3}
-          connectionDistance={150}
-          showConnections={true}
-        />
-      </div>
       <div className="w-full max-w-md space-y-8 relative z-10">
         <div className="flex flex-col items-center gap-4">
           <img src="/medx-logo.png" alt="MedX" className="w-32 h-32 object-contain drop-shadow-lg" />

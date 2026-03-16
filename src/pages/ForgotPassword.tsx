@@ -8,7 +8,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { MagicBentoCard } from '@/components/bento/MagicBento';
-import Particles from '@/components/backgrounds/Particles';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
