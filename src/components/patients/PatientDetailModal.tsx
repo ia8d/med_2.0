@@ -33,6 +33,7 @@ import {
   Clipboard,
   Upload,
   ShieldCheck,
+  Loader2,
 } from 'lucide-react';
 
 interface PatientDetailModalProps {
