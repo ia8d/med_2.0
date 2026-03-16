@@ -26,7 +26,7 @@ const useAssemblyAITranscription = () => {
     try {
       // Primeiro, obtenha um token temporário do seu backend
       // Você deve criar este endpoint para proteger sua API key
-      const tokenResponse = await fetch('https://webhook.n8nlabz.com.br/webhook/assemblyai-token', {
+      const tokenResponse = await fetch(`${import.meta.env.VITE_N8N_WEBHOOK_URL}/assemblyai-token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -295,7 +295,7 @@ const useAssemblyAITranscription = () => {
         
         console.log('Payload:', payload);
         
-        const response = await fetch('https://webhook.n8nlabz.com.br/webhook/finalizar-transcricao', {
+        const response = await fetch(`${import.meta.env.VITE_N8N_WEBHOOK_URL}/finalizar-transcricao`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -585,7 +585,7 @@ export default function Teleconsulta() {
                       .from('teleconsultations')
                       .update({ meeting_url: pendingInvite.urlPatient })
                       .eq('id', pendingInvite.teleconsultationId);
-                    await fetch('https://webhook.n8nlabz.com.br/webhook/enviar-link', {
+                    await fetch(`${import.meta.env.VITE_N8N_WEBHOOK_URL}/enviar-link`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({

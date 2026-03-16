@@ -118,7 +118,7 @@ export function AgentExamModal({ open, onOpenChange }: AgentExamModalProps) {
       formData.append('file', selectedFile);
 
       // Chamada para o seu Webhook do n8n
-      const response = await fetch('https://webhook.ia8d.com/webhook/agent-exame', {
+      const response = await fetch(`${import.meta.env.VITE_N8N_WEBHOOK_URL}/agent-exame`, {
         method: 'POST',
         body: formData,
       });
