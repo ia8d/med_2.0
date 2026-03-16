@@ -26,7 +26,13 @@ export async function getApiBaseUrl(): Promise<string> {
     return cachedConfig.apiBaseUrl;
   }
 
-  const url = await getSystemSetting('api_base_url');
+  // Prioridade 1: Variável de Ambiente
+  let url = import.meta.env.VITE_N8N_WEBHOOK_URL;
+
+  // Prioridade 2: Banco de dados
+  if (!url) {
+    url = await getSystemSetting('api_base_url');
+  }
   
   if (!url) {
     throw new Error('Configuração "api_base_url" não encontrada no banco de dados. Verifique a tabela system_settings.');
