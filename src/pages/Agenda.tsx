@@ -107,7 +107,7 @@ export default function Agenda() {
   const [externalAppointments, setExternalAppointments] = useState<Appointment[]>([]);
 
   // Hook para gerenciar horários (apenas para médicos)
-  const { schedules, saveSchedule, loading: schedulesLoading } = useDoctorSchedule(user?.role === 'doctor' ? user.id : '');
+  const { schedules, saveAllSchedules, loading: schedulesLoading } = useDoctorSchedule(user?.role === 'doctor' ? user.id : '');
   const [isSaving, setIsSaving] = useState(false);
   const [localSchedules, setLocalSchedules] = useState<Record<number, ScheduleType>>({});
 
@@ -894,17 +894,7 @@ export default function Agenda() {
 
     setIsSaving(true);
     try {
-      const promises = Object.values(localSchedules).map((schedule) => {
-        if (schedule.is_active) {
-          return saveSchedule(schedule);
-        }
-        if (schedule.id) {
-          return saveSchedule({ ...schedule, is_active: false });
-        }
-        return Promise.resolve();
-      });
-
-      await Promise.all(promises);
+      await saveAllSchedules(localSchedules);
       toast.success('Horários salvos com sucesso!');
     } catch (error: any) {
       toast.error('Erro ao salvar horários: ' + error.message);
