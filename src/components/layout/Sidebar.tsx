@@ -138,7 +138,7 @@ export const Sidebar = () => {
       {/* Collapse Toggle Button */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-4 top-10 bg-primary text-primary-foreground rounded-full p-2 shadow-2xl z-[60] border-2 border-background hover:scale-110 hover:bg-primary/90 active:scale-95 transition-all duration-200 group-hover:opacity-100"
+        className="absolute -right-4 top-10 bg-primary text-primary-foreground rounded-full p-2 shadow-2xl z-[60] border-2 border-background hover:scale-110 hover:bg-primary/90 active:scale-95 transition-all duration-200"
         aria-label={isCollapsed ? "Expandir menu" : "Recolher menu"}
       >
         {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -239,7 +239,7 @@ export const Sidebar = () => {
           {!isCollapsed && (
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-sidebar-foreground truncate">{user?.name ?? ''}</p>
-              <p className="text-xs text-muted-foreground capitalize truncate">{user?.role ?? ''}</p>
+              <p className="text-xs text-sidebar-foreground/70 capitalize truncate">{user?.role ?? ''}</p>
             </div>
           )}
         </NavLink>
