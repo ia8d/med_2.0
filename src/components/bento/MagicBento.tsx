@@ -144,8 +144,8 @@ export function MagicBentoCard({
       className={
         "relative overflow-hidden rounded-xl border border-border " +
         (disableAnimations ? "" : "will-change-transform ") +
-        // Glass look
-        "bg-card/30 backdrop-blur-md supports-[backdrop-filter]:bg-card/20 " +
+        // Removido backdrop-blur para melhor performance de renderização
+        "bg-card/95 " + 
         "transition-all duration-300 ease-out hover:shadow-[0_0_0_2px_hsl(var(--primary))] " +
         "hover:translate-y-[-2px] " +
         (className ? className : '')
