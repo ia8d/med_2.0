@@ -106,7 +106,7 @@ export const Sidebar = () => {
     },
     { 
       path: '/users', 
-      icon: Settings, 
+      icon: UserCircle, 
       label: 'Usuários', 
       roles: ['owner'] 
     },
@@ -138,7 +138,7 @@ export const Sidebar = () => {
       {/* Collapse Toggle Button */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-4 top-10 bg-primary text-primary-foreground rounded-full p-2 shadow-xl z-50 border-2 border-background hover:scale-110 active:scale-95 transition-all duration-200"
+        className="absolute -right-4 top-10 bg-primary text-primary-foreground rounded-full p-2 shadow-2xl z-[60] border-2 border-background hover:scale-110 hover:bg-primary/90 active:scale-95 transition-all duration-200 group-hover:opacity-100"
         aria-label={isCollapsed ? "Expandir menu" : "Recolher menu"}
       >
         {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
