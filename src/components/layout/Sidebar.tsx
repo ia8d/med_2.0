@@ -132,7 +132,7 @@ export const Sidebar = () => {
 
   return (
     <div className={cn(
-      "h-screen bg-sidebar-background border-r border-sidebar-border flex flex-col transition-all duration-300 relative group",
+      "h-screen bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300 relative group",
       isCollapsed ? "w-20" : "w-64"
     )}>
       {/* Collapse Toggle Button */}
