@@ -145,7 +145,7 @@ export default function DoctorsInsurance() {
                     <strong className="mx-1">"Convênios"</strong> 
                     e selecionar quais operadoras e planos aceita atender.
                   </p>
-                  <div className="bg-white/80 rounded-lg p-3 border border-blue-200">
+                  <div className="bg-background/80 rounded-lg p-3 border border-blue-200">
                     <p className="text-sm font-medium text-blue-900 mb-2">💡 Como funciona:</p>
                     <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
                       <li>Médico faz login no sistema</li>

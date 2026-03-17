@@ -866,7 +866,7 @@ export default function WhatsApp() {
               <div className="px-3 pt-4 pb-3">
                 <div className="flex gap-2 mb-3">
                   <button
-                    className={`text-xs px-3 py-1.5 rounded-full ${tab === 'all' ? 'bg-accent text-white' : 'hover:bg-accent/50'}`}
+                    className={`text-xs px-3 py-1.5 rounded-full ${tab === 'all' ? 'bg-accent text-accent-foreground shadow-sm' : 'hover:bg-accent/50'}`}
                     onClick={() => setTab('all')}
                   >
                     Todos
@@ -936,7 +936,7 @@ export default function WhatsApp() {
                             isUnread ? 'bg-primary/5' : ''
                           } ${
                             s.kind === 'pre_patient' ? 'border-amber-400' : s.kind === 'patient' ? 'border-emerald-400' : 'border-muted'
-                          } ${active ? 'bg-accent' : 'hover:bg-accent/50'}`}
+                          } ${active ? 'bg-accent' : 'hover:bg-accent/20'}`}
                         >
                           <div className="flex items-center gap-2">
                             <Avatar className={`h-8 w-8 shrink-0 ${s.kind === 'pre_patient' ? 'bg-amber-100' : 'bg-primary/10'}`}>
@@ -954,9 +954,9 @@ export default function WhatsApp() {
                                 {isUnread && <div className="w-2 h-2 rounded-full bg-primary shrink-0" />}
                               </div>
                               <div className={`text-[10px] font-medium ${s.kind === 'pre_patient' ? 'text-amber-700' : s.kind === 'patient' ? 'text-emerald-700' : 'text-slate-500'}`}>{s.kind === 'pre_patient' ? 'Pré Paciente' : s.kind === 'patient' ? 'Paciente' : 'Desconhecido'}</div>
-                              <div className={`text-xs truncate ${isUnread ? 'text-foreground font-medium' : 'text-white'}`}>{s.lastMessagePreview}</div>
+                              <div className={`text-xs truncate ${isUnread ? 'text-foreground font-medium' : 'text-muted-foreground font-light'}`}>{s.lastMessagePreview}</div>
                             </div>
-                            <div className="text-[11px] text-white shrink-0 ml-1">{s.totalMessages}</div>
+                            <div className="text-[11px] text-muted-foreground shrink-0 ml-1">{s.totalMessages}</div>
                           </div>
                         </button>
                         
@@ -992,7 +992,7 @@ export default function WhatsApp() {
                       {selectedSession ? (selectedSession.kind === 'pre_patient' ? 'Pré Paciente' : (selectedSession.displayName ?? selectedSession.sessionId)) : (selectedSessionId ?? 'Selecione uma conversa')}
                     </div>
                     {assignedDoctor && (
-                      <div className="flex items-center gap-1 text-xs text-white bg-accent/50 px-2 py-0.5 rounded-full whitespace-nowrap">
+                      <div className="flex items-center gap-1 text-xs text-accent-foreground bg-accent px-2 py-0.5 rounded-full whitespace-nowrap">
                         <Stethoscope className="h-3 w-3" />
                         <span className="truncate max-w-[120px]">{assignedDoctor.name}</span>
                       </div>
