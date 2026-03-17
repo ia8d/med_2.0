@@ -155,12 +155,13 @@ export function InsuranceDonutCard() {
                   <YAxis type="number" hide />
                   <Tooltip 
                     contentStyle={{ 
-                      backgroundColor: '#1a1a1a', 
-                      border: '1px solid #333',
+                      backgroundColor: 'hsl(var(--card))', 
+                      border: '1px solid hsl(var(--border))',
                       borderRadius: '8px',
-                      fontSize: '12px'
+                      fontSize: '12px',
+                      color: 'hsl(var(--foreground))'
                     }}
-                    labelStyle={{ color: '#fff' }}
+                    labelStyle={{ color: 'hsl(var(--foreground))' }}
                     formatter={(value: any, name: string, props: any) => [
                       `${value} pacientes (${props.payload.percentage}%)`,
                       props.payload.name

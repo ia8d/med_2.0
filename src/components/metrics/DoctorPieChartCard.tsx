@@ -165,7 +165,7 @@ export function DoctorPieChartCard() {
                 {doctorStats.slice(3).map((doctor, index) => (
                   <div 
                     key={doctor.id}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 hover:bg-secondary/80 transition-colors"
                   >
                     <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary text-xs font-semibold">
                       {index + 4}º
@@ -188,10 +188,10 @@ export function DoctorPieChartCard() {
                 <p className="text-xs text-muted-foreground mb-3 text-center">Distribuição Comparativa</p>
                 <ResponsiveContainer width="100%" height={220}>
                   <RadarChart data={doctorStats.slice(0, 5)}>
-                    <PolarGrid stroke="#333" />
+                    <PolarGrid stroke="hsl(var(--border))" />
                     <PolarAngleAxis 
                       dataKey="name" 
-                      tick={{ fill: '#888', fontSize: 10 }}
+                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
                       tickFormatter={(value) => value.split(' ')[0]}
                     />
                     <PolarRadiusAxis angle={90} domain={[0, 'auto']} tick={{ fill: '#888', fontSize: 10 }} />

@@ -60,7 +60,7 @@ export function WeekdayChartCard() {
         {weekdayStats.some(s => s.count > 0) ? (
           <ResponsiveContainer width="100%" height={350}>
             <BarChart data={weekdayStats}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" opacity={0.1} />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
               <XAxis 
                 dataKey="name" 
                 stroke="#888"
@@ -72,13 +72,13 @@ export function WeekdayChartCard() {
               />
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: '#1a1a1a', 
-                  border: '1px solid #333',
+                  backgroundColor: 'hsl(var(--card))', 
+                  border: '1px solid hsl(var(--border))',
                   borderRadius: '8px',
-                  color: '#fff'
+                  color: 'hsl(var(--foreground))'
                 }}
-                labelStyle={{ color: '#fff' }}
-                cursor={{ fill: 'rgba(82, 39, 255, 0.1)' }}
+                labelStyle={{ color: 'hsl(var(--foreground))' }}
+                cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
               />
               <Bar dataKey="count" radius={[8, 8, 0, 0]}>
                 {weekdayStats.map((entry, index) => (

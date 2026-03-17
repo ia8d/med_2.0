@@ -73,13 +73,13 @@ export function PeakHoursChartCard() {
               />
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: '#1a1a1a', 
-                  border: '1px solid #333',
+                  backgroundColor: 'hsl(var(--card))', 
+                  border: '1px solid hsl(var(--border))',
                   borderRadius: '8px',
-                  color: '#fff'
+                  color: 'hsl(var(--foreground))'
                 }}
-                labelStyle={{ color: '#fff' }}
-                cursor={{ fill: 'rgba(82, 39, 255, 0.1)' }}
+                labelStyle={{ color: 'hsl(var(--foreground))' }}
+                cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
               />
               <Bar dataKey="count" radius={[8, 8, 0, 0]}>
                 {hourStats.map((entry, index) => (

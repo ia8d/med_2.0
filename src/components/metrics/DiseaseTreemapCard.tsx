@@ -79,8 +79,8 @@ export function DiseaseTreemapCard() {
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#1a1a1a] border border-[#333] rounded-lg p-3 shadow-lg">
-          <p className="text-white text-sm font-medium mb-1">{payload[0].payload.fullName}</p>
+        <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+          <p className="text-foreground text-sm font-medium mb-1">{payload[0].payload.fullName}</p>
           <p className="text-primary text-xs">
             <span className="font-semibold">{payload[0].value}</span> ocorrência(s)
           </p>
@@ -110,7 +110,7 @@ export function DiseaseTreemapCard() {
               layout="vertical"
               margin={{ top: 5, right: 30, left: 150, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" opacity={0.1} />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
               <XAxis 
                 type="number"
                 stroke="#888"
