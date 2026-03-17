@@ -95,88 +95,79 @@ export function useDashboardMetrics() {
       const firstDayLastMonth = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1).toISOString();
       const lastDayLastMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 0).toISOString();
 
-      // Buscar consultas hoje
-      const { count: consultasHoje } = await supabase
-        .from('appointments')
-        .select('*', { count: 'exact', head: true })
-        .gte('scheduled_at', today)
-        .lt('scheduled_at', new Date(new Date().setDate(new Date().getDate() + 1)).toISOString());
-
-      // Buscar consultas mês atual
-      const { count: consultasMesAtual } = await supabase
-        .from('appointments')
-        .select('*', { count: 'exact', head: true })
-        .gte('scheduled_at', firstDayCurrentMonth);
-
-      // Buscar consultas mês anterior
-      const { count: consultasMesAnterior } = await supabase
-        .from('appointments')
-        .select('*', { count: 'exact', head: true })
-        .gte('scheduled_at', firstDayLastMonth)
-        .lte('scheduled_at', lastDayLastMonth);
-
-      // Buscar total de pacientes CRM
-      const { count: pacientesCRM } = await supabase
-        .from('patients')
-        .select('*', { count: 'exact', head: true });
-
-      // Buscar pacientes criados mês atual
-      const { count: pacientesCRMMesAtual } = await supabase
-        .from('patients')
-        .select('*', { count: 'exact', head: true })
-        .gte('created_at', firstDayCurrentMonth);
-
-      // Buscar pacientes criados mês anterior
-      const { count: pacientesCRMMesAnterior } = await supabase
-        .from('patients')
-        .select('*', { count: 'exact', head: true })
-        .gte('created_at', firstDayLastMonth)
-        .lte('created_at', lastDayLastMonth);
-
-      // Buscar pré-pacientes
-      const { count: prePatientes } = await supabase
-        .from('pre_patients')
-        .select('*', { count: 'exact', head: true });
-
-      // Buscar médicos
-      const { count: totalMedicos } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact', head: true })
-        .eq('role', 'doctor');
-
-      // Buscar secretárias
-      const { count: totalSecretarias } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact', head: true })
-        .eq('role', 'secretary');
-
-      // Buscar mensagens hoje
-      const { count: mensagensHoje } = await supabase
-        .from('messages')
-        .select('*', { count: 'exact', head: true })
-        .gte('created_at', today);
-
-      // Buscar mensagens mês atual
-      const { count: mensagensMesAtual } = await supabase
-        .from('messages')
-        .select('*', { count: 'exact', head: true })
-        .gte('created_at', firstDayCurrentMonth);
-
-      // Buscar follow-ups pendentes
-      const { count: followupsPendentes } = await supabase
-        .from('follow_ups')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'pending');
-
-      // Buscar prontuários criados
-      const { count: prontuariosCriados } = await supabase
-        .from('medical_records')
-        .select('*', { count: 'exact', head: true });
-
-      // Buscar consultas de IA
-      const { count: consultasIA } = await supabase
-        .from('agent_consultations')
-        .select('*', { count: 'exact', head: true });
+      // Buscar todas as métricas em paralelo para melhor performance
+      const [
+        { count: consultasHoje },
+        { count: consultasMesAtual },
+        { count: consultasMesAnterior },
+        { count: pacientesCRM },
+        { count: pacientesCRMMesAtual },
+        { count: pacientesCRMMesAnterior },
+        { count: prePatientes },
+        { count: totalMedicos },
+        { count: totalSecretarias },
+        { count: mensagensHoje },
+        { count: mensagensMesAtual },
+        { count: followupsPendentes },
+        { count: prontuariosCriados },
+        { count: consultasIA }
+      ] = await Promise.all([
+        supabase
+          .from('appointments')
+          .select('*', { count: 'exact', head: true })
+          .gte('scheduled_at', today)
+          .lt('scheduled_at', new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()),
+        supabase
+          .from('appointments')
+          .select('*', { count: 'exact', head: true })
+          .gte('scheduled_at', firstDayCurrentMonth),
+        supabase
+          .from('appointments')
+          .select('*', { count: 'exact', head: true })
+          .gte('scheduled_at', firstDayLastMonth)
+          .lte('scheduled_at', lastDayLastMonth),
+        supabase
+          .from('patients')
+          .select('*', { count: 'exact', head: true }),
+        supabase
+          .from('patients')
+          .select('*', { count: 'exact', head: true })
+          .gte('created_at', firstDayCurrentMonth),
+        supabase
+          .from('patients')
+          .select('*', { count: 'exact', head: true })
+          .gte('created_at', firstDayLastMonth)
+          .lte('created_at', lastDayLastMonth),
+        supabase
+          .from('pre_patients')
+          .select('*', { count: 'exact', head: true }),
+        supabase
+          .from('profiles')
+          .select('*', { count: 'exact', head: true })
+          .eq('role', 'doctor'),
+        supabase
+          .from('profiles')
+          .select('*', { count: 'exact', head: true })
+          .eq('role', 'secretary'),
+        supabase
+          .from('messages')
+          .select('*', { count: 'exact', head: true })
+          .gte('created_at', today),
+        supabase
+          .from('messages')
+          .select('*', { count: 'exact', head: true })
+          .gte('created_at', firstDayCurrentMonth),
+        supabase
+          .from('follow_ups')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pending'),
+        supabase
+          .from('medical_records')
+          .select('*', { count: 'exact', head: true }),
+        supabase
+          .from('agent_consultations')
+          .select('*', { count: 'exact', head: true })
+      ]);
 
       setMetrics({
         consultasHoje: consultasHoje || 0,
