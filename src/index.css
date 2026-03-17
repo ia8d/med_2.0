@@ -8,56 +8,56 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* MedX Blue Theme */
-    --background: 222 47% 11%;
-    --foreground: 0 0% 100%;
+    /* MedX Light Theme */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
 
-    --card: 221 39% 14%;
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
 
-    --popover: 221 39% 14%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
 
     /* Brand Primary (MedX Blue #008efc => hsl(206 100% 49%)) */
     --primary: 206 100% 49%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary (darker blue) */
-    --secondary: 206 70% 40%;
-    --secondary-foreground: 0 0% 100%;
+    /* Secondary (Soft Gray/Blue for Light Mode) */
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 221 39% 20%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    /* Accent (lighter blue) */
-    --accent: 206 90% 60%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent (Lighter background for focus areas) */
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222 47% 11%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 221 39% 20%;
-    --input: 221 39% 20%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
     --ring: 206 100% 49%;
 
     --radius: 0.75rem;
 
-    /* Sidebar Lighter Blue */
-    --sidebar-background: 222 47% 15%; /* Lightened from 8% */
-    --sidebar-foreground: 215 20% 90%; /* Slate-ish white */
+    /* Sidebar Dark Blue (Maintaining high contrast) */
+    --sidebar-background: 222 47% 11%; /* Back to deeper blue for better visibility on white */
+    --sidebar-foreground: 210 40% 98%;
     --sidebar-primary: 206 100% 49%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 47% 20%; /* Lightened from 14% */
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 222 47% 22%; /* Lightened from 16% */
+    --sidebar-accent: 222 47% 18%; /* Subtle lighter blue for hover on sidebar */
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 222 47% 15%;
     --sidebar-ring: 206 100% 49%;
 
-    /* Chart colors - blue scale */
+    /* Chart colors - adjusted for light background */
     --chart-1: 206 100% 49%;
-    --chart-2: 206 90% 60%;
-    --chart-3: 206 80% 70%;
-    --chart-4: 206 70% 40%;
-    --chart-5: 206 60% 55%;
+    --chart-2: 221 83% 53%;
+    --chart-3: 199 89% 48%;
+    --chart-4: 226 70% 50%;
+    --chart-5: 190 90% 45%;
   }
 }
 
