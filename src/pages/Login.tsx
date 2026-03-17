@@ -44,13 +44,13 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-background p-4 relative overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center bg-sidebar p-4 relative overflow-hidden">
       <div className="w-full max-w-md space-y-8 relative z-10">
         {/* Logo */}
         <div className="flex flex-col items-center gap-4">
           <img src="/medx-logo.png" alt="MedX" className="w-48 h-48 object-contain drop-shadow-lg" />
           <div className="text-center">
-            <p className="text-muted-foreground mt-1">Sistema de Gestão Médica</p>
+            <p className="text-white/70 mt-1 uppercase tracking-widest text-xs font-semibold">Sistema de Gestão Médica</p>
           </div>
         </div>
 
