@@ -132,16 +132,16 @@ export const Sidebar = () => {
 
   return (
     <div className={cn(
-      "h-screen bg-sidebar-background border-r border-sidebar-border flex flex-col overflow-hidden transition-all duration-300 relative group",
+      "h-screen bg-sidebar-background border-r border-sidebar-border flex flex-col transition-all duration-300 relative group",
       isCollapsed ? "w-20" : "w-64"
     )}>
       {/* Collapse Toggle Button */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-10 bg-sidebar-primary text-sidebar-primary-foreground rounded-full p-1.5 shadow-lg z-50 border-2 border-sidebar-background hover:scale-110 transition-all duration-200"
+        className="absolute -right-4 top-10 bg-primary text-primary-foreground rounded-full p-2 shadow-xl z-50 border-2 border-background hover:scale-110 active:scale-95 transition-all duration-200"
         aria-label={isCollapsed ? "Expandir menu" : "Recolher menu"}
       >
-        {isCollapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+        {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>
 
       {/* Logo */}
