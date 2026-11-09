@@ -4,6 +4,12 @@ Uma plataforma corporativa completa para gestão de clínicas e consultórios m�
 
 O sistema foi arquitetado para reduzir a carga operacional de secretárias e potencializar a decisão clínica dos médicos através de agentes autônomos.
 
+## 🎥 Demonstração Prática (Video Demo)
+A teoria da orquestração é complexa, mas o uso é simples. Assista ao vídeo de demonstração onde ilustramos a integração do WhatsApp, a atualização do Dashboard em tempo real e a Inteligência Artificial operando o prontuário:
+
+👉 **[Assistir ao Vídeo de Demonstração do MedX 2.0](https://drive.google.com/file/d/11y7Prq2dOGacBoZNM21hU4B9ZLbkeG9a/view?usp=sharing)**
+
+*(Nota: O vídeo ilustra a interface de gestão, a captura de leads via mensageria e o preenchimento autônomo abordados nesta documentação).*
 ## 🚧 Status do Projeto & Documentação (MVP)
 Este repositório reflete o **MVP (Produto Mínimo Viável)** da plataforma. O *core* de agendamento, orquestração de IA e teleconsultas está funcional, porém o código passa por ajustes contínuos, refatoração e otimização de performance.
 *   **Cultura de Documentação:** Navegando pelo repositório, você encontrará diversos arquivos `.md` espalhados pelas pastas. Eles contêm a documentação técnica detalhada, fluxos lógicos e passos de implementação de cada módulo, garantindo que qualquer desenvolvedor consiga entender a arquitetura e escalar o produto.
