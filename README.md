@@ -42,6 +42,14 @@ Lidar com dados de saúde exige governança absoluta. Toda a arquitetura foi con
 *   Tratamento de transbordo (Hand-off): A IA pausa automaticamente quando um humano assume o atendimento, mantendo o contexto salvo no PostgreSQL para auditoria.
 *   Isolamento de *Tenants*: O banco de dados impede o cruzamento acidental de prontuários, mantendo a integridade exigida por regulamentações de proteção de dados (LGPD).
 
+## 🔐 Acesso aos Fluxos de Orquestração (n8n)
+O código aberto neste repositório contempla o Front-end (MVP) e as documentações/migrações SQL do Supabase. Por diretrizes de **Segurança da Informação (Security by Design)** e proteção de chaves de API/Webhooks do ambiente de produção, os arquivos JSON de orquestração do n8n são mantidos em repositório privado.
+
+Quer entender a fundo como essa arquitetura foi desenhada ou discutir a implementação da orquestração de IA na prática? **Vamos conversar:**
+
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/55SEUNUMEROAQUI)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/gabriel-freitas-elumina/)
+
 ---
 
 > _"O futuro da saúde digital não está em substituir o médico, mas em eliminar o atrito operacional e o trabalho repetitivo. O MedX 2.0 é a aplicação prática da Inteligência Artificial como uma extensão da capacidade de atendimento humano."_
