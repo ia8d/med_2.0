@@ -4,10 +4,14 @@ Uma plataforma corporativa completa para gestão de clínicas e consultórios m�
 
 O sistema foi arquitetado para reduzir a carga operacional de secretárias e potencializar a decisão clínica dos médicos através de agentes autônomos.
 
+## 🚧 Status do Projeto & Documentação (MVP)
+Este repositório reflete o **MVP (Produto Mínimo Viável)** da plataforma. O *core* de agendamento, orquestração de IA e teleconsultas está funcional, porém o código passa por ajustes contínuos, refatoração e otimização de performance.
+*   **Cultura de Documentação:** Navegando pelo repositório, você encontrará diversos arquivos `.md` espalhados pelas pastas. Eles contêm a documentação técnica detalhada, fluxos lógicos e passos de implementação de cada módulo, garantindo que qualquer desenvolvedor consiga entender a arquitetura e escalar o produto.
+
 ## 🚀 Arquitetura "Megazord" (AI-Augmented Development)
 Este projeto é um *case* real de desenvolvimento de software hiper-acelerado. Ele foi construído orquestrando uma *stack* fragmentada de Inteligências Artificiais e plataformas *Low-Code* para entregar um produto complexo em tempo recorde:
 *   **Lovable:** Geração rápida dos componentes visuais (React/Shadcn UI) e prototipagem do Front-end.
-*   **Cursor IDE:** Atuação como engenheiro de software pareado (AI Pair Programming) para refatorar a base de código, ajustar tipagens no TypeScript, criar rotas de integração e garantir a regra de negócio.
+*   **Cursor IDE:** Atuação como engenheiro de software pareado (AI Pair Programming) para refatorar a base de código, ajustar tipagens no TypeScript, criar rotas de integração e iterar sobre o MVP.
 *   **n8n:** O verdadeiro "motor" da aplicação, rodando em background para processar webhooks, rotear mensagens de WhatsApp e orquestrar a lógica pesada.
 
 ## 🛠️ Core Tech Stack & Infraestrutura
@@ -36,7 +40,7 @@ Este projeto é um *case* real de desenvolvimento de software hiper-acelerado. E
 Lidar com dados de saúde exige governança absoluta. Toda a arquitetura foi construída com foco em resiliência e privacidade:
 *   Autenticação JWT via Supabase.
 *   Tratamento de transbordo (Hand-off): A IA pausa automaticamente quando um humano assume o atendimento, mantendo o contexto salvo no PostgreSQL para auditoria.
-*   Isolamento de *Tenants*: O banco de dados impede o cruzamento acidental de prontuários, mantendo a integridade exigida por regulamentações de proteção de dados.
+*   Isolamento de *Tenants*: O banco de dados impede o cruzamento acidental de prontuários, mantendo a integridade exigida por regulamentações de proteção de dados (LGPD).
 
 ---
 
