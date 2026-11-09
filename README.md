@@ -47,7 +47,7 @@ O código aberto neste repositório contempla o Front-end (MVP) e as documentaç
 
 Quer entender a fundo como essa arquitetura foi desenhada ou discutir a implementação da orquestração de IA na prática? **Vamos conversar:**
 
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/55SEUNUMEROAQUI)
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/555399364186)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/gabriel-freitas-elumina/)
 
 ---
